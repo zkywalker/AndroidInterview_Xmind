@@ -6,7 +6,7 @@ Android大厂面试总结，都是大厂面试的一些内容。大多数来源�
 
 xmind版点击单条后面的备注有我总结的简略答案和可以参考的文章。
 
-[xmind版本](./android_interview_tree.xmind)
+[xmind版本](./Android_interview_tree.xmind)
 
 [图片版本](./android_interview_xmind_image.png)
 
