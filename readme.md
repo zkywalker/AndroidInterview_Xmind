@@ -1,4 +1,4 @@
-# Android Interview Mind Mapping
+# Android SKILLS Mind Mapping
 
 ### 简介
 
@@ -24,6 +24,14 @@
 - 可以参考设计模式部分的思路：拆分理解原理->思考设计模式的要点->阅读和归纳Android系统里对应模式的代码->最后自己实践并回归知识的学习
 - [参考：思维导图真的有效吗？YJango的回答](<https://www.zhihu.com/question/20273625>)
 
+
+
+#### 参考资料
+
+[网上的一份面试总结](./quote_interview.jpg)
+
+[flutter知识脑图](./flutter-Learning.xmind)
+
 ## 更新日志
 
 ####  v0.1
@@ -35,3 +43,9 @@
 - 更新整体结构为Android知识在左侧，CS基础知识在右侧
 - 更新设计模式部分结构
 - 更新数据结构-树等知识点
+
+#### V0.2.1   2019/05/17
+
+- 添加flutter部分详细知识脑图
+- 添加rxJava部分知识点
+- 修改知识点结构
