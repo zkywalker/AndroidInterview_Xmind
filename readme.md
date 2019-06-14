@@ -28,6 +28,10 @@
 
 #### 参考资料
 
+[《Android源码设计模式解析与实战》](<https://book.douban.com/subject/26644935/>)
+
+[《Android开发艺术探索》](<https://book.douban.com/subject/26599538/>)
+
 [网上的一份面试总结](./quote_interview.jpg)
 
 [flutter知识脑图](./flutter-Learning.xmind)
