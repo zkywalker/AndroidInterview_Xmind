@@ -1,7 +1,6 @@
 package org.zky.demo
 
 import java.io.File
-import kotlin.math.max
 
 //单行注释
 
@@ -50,12 +49,36 @@ fun main(args: Array<String>) {
         }
     }
 
+    //---------------------循环---------------------------
+
+    //for循环用来处理可迭代的对象
     var 区间的使用 = { for (i in 1..4) print(i) }
     //这里插播一条命名规则：``可以使不合法的字符当做变量名
     var `区间加步长(其实就是中缀表达式)` = { for (i in 1..10 step 2) print(i) }
     var 反向的 = { for (i in 10 downTo 1) print(i) }
     var 排除最后一个元素 = { for (i in 1 until 10) print(i) }//右开区间
 
+    //kotlin 的while 和do while语句和java一致
+    //同样也支持return break continue跳出循环表达式
+
+    val kotlin支持label语法跳出指定的代码结构 = {
+        外部标签@ for(i in 1..100){
+            var j = i
+            内部标签@ while (j<200){
+                if (j == 60) {
+                    break@外部标签
+                }
+
+                j++
+
+                if (j ==50){
+                    continue@内部标签
+                }
+            }
+        }
+    }
+
+    //---------------------WHEN语句---------------------------
     var when语句: (Any) -> Unit = { x ->
         when (x) {
             1 -> print("1")
@@ -140,7 +163,7 @@ fun 高阶函数和lambda表达式() {
     //挂起函数
 
 
-    //---------------------实例化-----------------------
+    //---------------------函数的实例化-----------------------
     val 实例化函数: (Int, Int) -> Int = { a, b -> a + b }
 
     //可以推断类型的话就不用写
@@ -165,7 +188,7 @@ fun 高阶函数和lambda表达式() {
     //参数只有lambda的时候括号都可以不写
 //    val res = 函数带lambda参数 { a, b -> "lambda $a + $b" }
 
-    "只有一个参数的时候如果编译器可以识别签名，参数和->可以省略,隐士的声明为it".filter {
+    "只有一个参数的时候如果编译器可以识别签名，参数和->可以省略,隐式的声明为it".filter {
         val 结果也可以放最后一个位置隐式返回 = it == 'A'
         结果也可以放最后一个位置隐式返回
         //和下面等价
@@ -193,3 +216,133 @@ fun 高阶函数和lambda表达式() {
 
     //todo 闭包
 }
+
+fun 作用域函数(){
+    //总结：作用域函数就是对对象（作用域）执行一个代码块的函数
+    //详细：当我们调用一个对象的函数--这个函数使用拉姆达表达式提供了一个临时的作用域，
+    // 在这个域里我们可以访问这个对象而不使用他的名字。这种函数我们叫他作用域函数
+    //目前的八种作用域函数：let/run、also/apply、takeIf/takeUnless、with，repeat
+    //目的：作用域函数没有新的技术，主要的作用是让你的代码更简洁和可读
+    //区别：本质上他们都是很相似的，主要的区别点在于：怎么引用上下文对象和返回值（这两点区别我们稍后再讨论，先看下这些作用域函数）
+
+    val array = arrayListOf(1,2,3,4)
+
+    val let = array.let {
+        it.remove(0)
+        it.add(1)
+        it.size
+    }
+
+    val run = array.run{
+        add(111)
+        this.add(222)
+        size
+    }
+
+    //let和run的闭包有返回值，返回值就是函数的返回值。他们的区别在于上下文对象的获取
+
+    val also = array.also {
+        print("size of it is ${it.size}")
+    }
+
+    val apply = array.apply {
+        print("size of it is ${this.size} or $size")
+    }
+
+    //also和apply的闭包都没有返回值，函数的返回值是调用函数的对象本身。他们的区别在于上下文对象的获取
+
+    val takeIf = array.takeIf {
+        array.contains(1)
+    }?.also {
+        print("this array $it has 1")
+    }?: print("没有1啊")
+
+    val takeUnless = array.takeUnless {
+        array.contains(1)
+    }?.also {
+        print("没有1啊")
+    }?: print("this array $array has 1")
+
+    val with = with(array){
+        add(1)
+        remove(2)
+        size
+    }
+
+    //作用域函数的区别：1.闭包的上下文对象的引用是lambda的参数(it)还是lambda的接收者（this）
+    //2.闭包是否有返回值，函数是否有返回值
+
+
+    //repeat类似for循环（实现就是for循环+until）
+    val repeat = repeat(array.size){
+        print("array[$it] = ${array[it]}")
+    }
+
+    //作用域函数的使用举例
+    val numbers = mutableListOf("one", "two", "three", "four", "five")
+
+    val let可以在链式调用中调用一个或多个函数 = numbers.map { it.length }.filter { it > 3 }.let(::print)
+    //[5, 4, 4]
+
+    val str:String? = "hello"
+//    接受不可空字符串的函数(str)    这么调用无法通过编译
+    val let更常见的用法是对可空对象进行不可空的操作 =str?.let {
+        接受不可空字符串的函数(it)
+    }
+
+    //这样引入了一个局部变量（你使用it表示也没差啦）
+    val modifiedFirstItem = numbers.first().let { firstItem ->
+        println("The first item of the list is '$firstItem'")
+        if (firstItem.length >= 5) firstItem else "!" + firstItem + "!"
+    }.toUpperCase()
+
+    //一般with是用来提高可读性的，闭包不需要返回值。表达了"使用此对象，请执行以下操作"的意思
+    with(numbers) {
+        println("'with' is called with argument $this")
+        println("It contains $size elements")
+    }
+
+    //使用with来提供一个上下文对象的作用域，对其进行操作
+    val firstAndLast = with(numbers) {
+        "The first element is ${first()}," +
+                " the last element is ${last()}"
+    }
+
+    //需要对上下文对象初始化并输出lambda表达式的输出值，这时候可以使用run 或者 let（run更简洁，因为不需要使用it这个上下文的引用）
+
+    //因为run没有lambda参数，你也可以直接使用run这个非扩展函数"形式"，来执行一个代码块
+    val hexNumberRegex = run {
+        val digits = "0-9"
+        val hexDigits = "A-Fa-f"
+        val sign = "+-"
+
+        Regex("[$sign]?[$digits$hexDigits]+")
+    }
+
+    for (match in hexNumberRegex.findAll("+1234 -FFFF not-a-number")) {
+        println(match.value)
+    }
+
+    //apply可以以上下文对象为接收者，闭包返回值是这个对象本身。可以使用apply来表达"应用以下的任务给这个对象"
+    Person("小明").apply {
+        age =18
+        city = "北京"
+    }
+
+    //also和apply的区别在于上下文对象是lambda的参数，一般用于对这个对象的额外的操作比如打日志。
+    //一般来说，你在链式调用中去掉also也不应该破坏原有的逻辑。
+    // When you see also in the code, you can read it as “and also do the following”.
+    numbers.also { println("The list elements before adding new one: $it") }
+            .add("four")
+    /**
+     * 各作用域函数简要的预期目的：
+     * let：对非空对象执行lambda表达式、在局部作用域中引入一个表达式当做变量（字面意思不好理解但很简单见例子三）
+     * apply:对对象进行配置
+     * run：对对象进行配置并计算结果
+     * run（非扩展形式）：当需要一个表达式运行一个代码块（statements）的时候
+     * also:额外的效果、逻辑
+     * with：需要对对象调用一系列的函数
+     */
+}
+
+fun 接受不可空字符串的函数(str: String) {}

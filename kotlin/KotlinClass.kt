@@ -228,3 +228,7 @@ class KotlinClass constructor(val 构造参数: String = "可以给构造参数�
 
 
 }
+
+//数据类
+data class Person(var name: String, var age: Int = 0, var city: String = "")
+
