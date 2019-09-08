@@ -30,6 +30,8 @@
 
 [《Android源码设计模式解析与实战》](<https://book.douban.com/subject/26644935/>)
 
+[《深入理解Android》系列](https://book.douban.com/subject/11542973/)
+
 [《Android开发艺术探索》](<https://book.douban.com/subject/26599538/>)
 
 [网上的一份面试总结](./quote_interview.jpg)
