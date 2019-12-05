@@ -2,6 +2,20 @@ package org.zky.demo
 
 import java.io.File
 
+/**
+ * 1.kotlin环境配置
+ * homebrew
+ * brew install kotlin
+ * 2.kotlin编译
+ * kotlinc kotlinFile.kt
+ * 生成class文件(-d 输出名称 可以是class/jar/目录; -include-runtime 让jar包含kotlin的运行库，可以直接运行)
+ * kotlin kotlinFile.class 运行编译好的class文件
+ * javap kotlinFile.class 查看class文件的字节码结构
+ * javap -c kotlinFile.class 查看完整的字节码信息
+ * 3.android studio(idea)反编译
+ * tools->kotlin->show kotlin bytecode->decompile
+ */
+
 //单行注释
 
 /*
@@ -32,22 +46,37 @@ fun main(args: Array<String>) {
 
     //Kotlin的空安全设计对于声明可为空的参数，在使用时要进行空判断处理，有两种处理方式，字段后加!!像Java一样抛出空异常，
     // 另一种字段后加?可不做处理返回值为 null或配合?:做空判断处理
+    //反编译可以看到kotlin 使用了 注解@Nullable 、判空实现了空安全
     val nullableAge: Int? = 123
 
-    nullableAge!!.compareTo(12)//如果空了就抛出异常
+    nullableAge!!.compareTo(12)//非空断言，如果空了就抛出异常
 
     nullableAge?.compareTo(12)//如果空了就不管啦
+
+    val elvis操作符 = nullableAge?.plus(1)?:100 //空的话加1否则返回100，也叫合并运算符
 
     val res = nullableAge ?: -1//如果空就返回一个值
 
     //类型判断
     var 类型判断: (Any) -> String = { obj -> if (obj is String) "是字符串哎" else "不是字符串哎" }
 
+    //smart casts
+    //反编译的话我们会看到实际上就是使用 instanceof 关键词实现的
     var 类型判断完直接用可以: (Any) -> Unit = { obj ->
         if (obj is String && obj.length > 0) {
             print("这是一个字符串并且长度大于1哎")
         }
     }
+
+    //需要注意的是只有在确定类型检查后变量不会改变的情况下才会触发smart casts
+    //常见的例子：类的属性为可变变量的时候你不能在类型判断后直接用
+
+    //as强转：
+    (nullableAge as Int).apply {
+        plus(100)
+    }
+    val 不确定类型可以这样用: Int? = nullableAge as? Int
+
 
     //---------------------循环---------------------------
 
@@ -88,6 +117,16 @@ fun main(args: Array<String>) {
             else -> print("else")
         }
     }
+
+    when {
+        1 > 0 -> print("hello")
+        true -> print("kotlin")
+        else -> {
+            print("when语句省略入参可以实现类似if的语法")
+        }
+    }
+
+    //todo when和模式匹配
 
     var intName = name.toInt()
     val file = File("KotlinDemo.iml")
@@ -140,13 +179,21 @@ fun vars(vararg vars: Int) {
 
 typealias 给函数起别名 = (Int, Int) -> Unit
 
+//中缀表示法可以忽略函数的点和圆括号调用
+//但是必须满足：1、是成员函数或者扩展函数。2、只有一个参数
+infix fun Int.pul(x: Int): Int {
+    return this + x
+}
+
+val `中缀表达式优先级低于算数操作符、类型准话、rangTo操作符` = 1 pul 2 * 2 //等于 5
+
 fun 高阶函数和lambda表达式() {
     //高阶函数（higher order function、算子、泛函数）
     //从名字上我们可以看到，高阶函数是一个很数学化的概念，很多数学概念都是高阶函数
     //简单的来说高阶函数就是输入值或输出值为函数的一种函数
     //函数式编程基于高阶函数（lambda表达式），而他们的理论基础是lambda演算
     //简单的来说lambda演算可以推到表示所有可计算的（函数），是图灵等价的
-    //详细可参考计算机魔法师SICP(《计算机程序的构造和解释》)
+    //详细可参考计算机魔法书SICP(《计算机程序的构造和解释》)
 
     //kotlin 使用【 (输入参数类型) -> 输出参数的类型 】这样的结构表示函数类型(如何实例化后边再说):
     val onClick: (Int) -> Unit = { x -> print(x) }
@@ -157,6 +204,7 @@ fun 高阶函数和lambda表达式() {
 
     val 函数类型可以使用括号结合函数类型: (Int) -> ((String) -> Int)   //和上面等价
 
+    //kotlin允许对java的一些类库进行优化，java的单一抽象方法（SAM）都可以使用kotlin的函数代替，比如setOnCLickListener
 
     //函数类型可以有一个额外的接受者类型
 
@@ -182,7 +230,8 @@ fun 高阶函数和lambda表达式() {
 
     val 提前声明类型: (Int, Int) -> Unit = { a, b -> a + b }
 
-    val 函数带lambda参数: (Int, (Int, Int) -> String) -> String = { a, lambda -> "$a + ${lambda(a, a)}" }
+    val 函数带lambda参数: (Int, (Int, Int) -> String) -> String = lambda的作用域可以使用标签标示@{ a, lambda -> "$a + ${lambda(a, a)}" }
+    
     //lambda为最后参数的时候可以写在外面
     val res = 函数带lambda参数(1) { a, b -> "lambda $a + $b" }
     //参数只有lambda的时候括号都可以不写
@@ -346,3 +395,7 @@ fun 作用域函数(){
 }
 
 fun 接受不可空字符串的函数(str: String) {}
+
+class 密封类子类的子类: 密闭类的子类只能在该类的同一个文件(){
+
+}
