@@ -24,11 +24,13 @@
 - 可以参考设计模式部分的思路：拆分理解原理->思考设计模式的要点->阅读和归纳Android系统里对应模式的代码->最后自己实践并回归知识的学习
 - [参考：思维导图真的有效吗？YJango的回答](<https://www.zhihu.com/question/20273625>)
 
-
+一些题外话:笔者经过一段时间的准备，BATM过了两家半的技术面试，不过都没发下来offer（B HC被砍，M HR嫌涨幅高，A心态蹦了最终面算法没过），吐槽下HR都是满嘴跑火车还一直拖着你，真是*。面试总结就是：1.别信HR的话，她骗你你也酌情骗她，正式offer没发都是浮云。2.好好准备下算法。
 
 #### 参考资料
 
 [《Android源码设计模式解析与实战》](<https://book.douban.com/subject/26644935/>)
+
+[《深入理解Android》系列](https://book.douban.com/subject/11542973/)
 
 [《Android开发艺术探索》](<https://book.douban.com/subject/26599538/>)
 
