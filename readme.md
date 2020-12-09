@@ -1,4 +1,4 @@
-# Android SKILLS Mind Mapping
+# Android SKills Mind Mapping
 
 ### 简介
 
